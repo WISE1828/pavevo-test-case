@@ -4,7 +4,7 @@ import { Pressable, TextInput, View } from 'react-native'
 
 const Header = () => {
 	return (
-		<View className='bg-zinc-700 pt-20 p-5 flex-row gap-3'>
+		<View className='bg-zinc-700 pt-20 p-3 flex-row gap-3'>
 			<Pressable className='bg-zinc-600 w-12 aspect-square rounded-xl items-center justify-center'>
 				<FontAwesome name='filter' size={24} color='white' />
 			</Pressable>
