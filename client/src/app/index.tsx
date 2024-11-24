@@ -1,17 +1,18 @@
 import AnimeListItem from '@/components/AnimeListItem'
 import Header from '@/components/Header'
-import { IAnime } from '@/types/type'
+import { DateRange, Filters, IAnime } from '@/types/type'
 import axios from 'axios'
 import React, { FC, useEffect, useState } from 'react'
-import { FlatList, SafeAreaView } from 'react-native'
+import { FlatList, SafeAreaView, Text, View } from 'react-native'
 
 const HomeScreen: FC = () => {
 	const [anime, setAnime] = useState<IAnime[]>([])
-	const [searchQuery, setSearchQuery] = useState('') // Состояние для хранения поискового запроса
-	const [filters, setFilters] = useState({ TV: false, Movie: false }) // Состояние для хранения фильтров
+	const [searchQuery, setSearchQuery] = useState<string>('')
+	const [filters, setFilters] = useState<Filters>({ TV: false, Movie: false })
+	const [dateRange, setDateRange] = useState<DateRange>({ from: '', to: '' })
 
 	useEffect(() => {
-		fetchAnime() // Вызов функции для получения аниме
+		fetchAnime()
 	}, [])
 
 	async function fetchAnime() {
@@ -19,13 +20,12 @@ const HomeScreen: FC = () => {
 			const response = await axios.get<{ data: IAnime[] }>(
 				'https://api.jikan.moe/v4/anime'
 			)
-			setAnime(response.data.data) // Устанавливаем массив аниме
+			setAnime(response.data.data)
 		} catch (e) {
 			alert(e)
 		}
 	}
 
-	// Фильтрация аниме на основе поискового запроса и выбранных фильтров
 	const filteredAnime = anime.filter(a => {
 		const matchesSearch = a.title
 			.toLowerCase()
@@ -34,7 +34,22 @@ const HomeScreen: FC = () => {
 			(filters.TV && a.type === 'TV') ||
 			(filters.Movie && a.type === 'Movie') ||
 			(!filters.TV && !filters.Movie)
-		return matchesSearch && matchesFilter
+
+		const animeYear = a.year
+		const fromYear = parseInt(dateRange.from, 10)
+		const toYear = parseInt(dateRange.to, 10)
+
+		if (!dateRange.from && !dateRange.to) {
+			return matchesSearch && matchesFilter
+		}
+
+		const matchesDate =
+			(!dateRange.from || animeYear >= fromYear) &&
+			(!dateRange.to || animeYear <= toYear) &&
+			fromYear >= 1998 &&
+			toYear >= 1998
+
+		return matchesSearch && matchesFilter && matchesDate
 	})
 
 	return (
@@ -43,13 +58,21 @@ const HomeScreen: FC = () => {
 				setSearchQuery={setSearchQuery}
 				filters={filters}
 				setFilters={setFilters}
+				dateRange={dateRange}
+				setDateRange={setDateRange}
 			/>
 			<SafeAreaView className='bg-zinc-800 flex-1'>
-				<FlatList
-					data={filteredAnime} // Используем отфильтрованный список
-					renderItem={({ item }) => <AnimeListItem anime={item} />}
-					keyExtractor={item => item.mal_id.toString()} // Уникальный ключ для каждого элемента
-				/>
+				{filteredAnime.length > 0 ? (
+					<FlatList
+						data={filteredAnime}
+						renderItem={({ item }) => <AnimeListItem anime={item} />}
+						keyExtractor={item => item.mal_id.toString()}
+					/>
+				) : (
+					<View className='flex-1 justify-center items-center'>
+						<Text className='text-white text-lg'>Ничего не найдено</Text>
+					</View>
+				)}
 			</SafeAreaView>
 		</>
 	)

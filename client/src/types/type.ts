@@ -1,36 +1,46 @@
 export interface IAnime {
-	mal_id: number // Уникальный идентификатор аниме
+	mal_id: number
 	images: {
 		jpg: {
-			image_url: string // URL изображения
-			small_image_url: string // URL маленького изображения
-			large_image_url: string // URL большого изображения
+			image_url: string
+			small_image_url: string
+			large_image_url: string
 		}
 		webp: {
-			image_url: string // URL изображения в формате WEBP
-			small_image_url: string // URL маленького изображения в формате WEBP
-			large_image_url: string // URL большого изображения в формате WEBP
+			image_url: string
+			small_image_url: string
+			large_image_url: string
 		}
 	}
-	title: string // Название аниме
-	title_japanese: string // Название на японском
-	type: string // Тип аниме (например, TV)
+	title: string
+	title_japanese: string
+	type: string
 	aired: {
-		from: string // Дата начала
-		to: string // Дата окончания
+		from: string
+		to: string
 		prop: {
 			from: {
-				day: number // День начала
-				month: number // Месяц начала
-				year: number // Год начала
+				day: number
+				month: number
+				year: number
 			}
 			to: {
-				day: number // День окончания
-				month: number // Месяц окончания
-				year: number // Год окончания
+				day: number
+				month: number
+				year: number
 			}
-			string: string // Строковое представление дат
+			string: string
 		}
 	}
-	year: number // Год выхода
+	year: number
+}
+
+export interface Filters {
+	TV: boolean
+	Movie: boolean
+}
+
+export interface DateRange {
+	from: string
+	to: string
 }
