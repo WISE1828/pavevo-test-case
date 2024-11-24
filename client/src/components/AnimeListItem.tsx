@@ -1,4 +1,4 @@
-import { IAnime } from '@/types'
+import { IAnime } from '@/types/type'
 import React from 'react'
 import { Image, Text, View } from 'react-native'
 
@@ -12,7 +12,7 @@ const AnimeListItem = ({ anime }: { anime: IAnime }) => {
 				/>
 				<View className='flex-col justify-between'>
 					<View>
-						<Text className='text-white font-semibold text-lg'>
+						<Text className='text-white font-semibold text-base'>
 							{anime.title}
 						</Text>
 						<Text className='text-zinc-400 text-sm font-light'>

@@ -1,4 +1,4 @@
-import { IAnime } from '@/types'
+import { IAnime } from '@/types/type'
 import axios from 'axios'
 
 export default async function fetchAnime() {

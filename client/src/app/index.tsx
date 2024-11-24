@@ -1,5 +1,6 @@
 import AnimeListItem from '@/components/AnimeListItem'
-import { IAnime } from '@/types'
+import Header from '@/components/Header'
+import { IAnime } from '@/types/type'
 import axios from 'axios'
 import React, { FC, useEffect, useState } from 'react'
 import { FlatList, SafeAreaView } from 'react-native'
@@ -23,13 +24,16 @@ const HomeScreen: FC = () => {
 	}
 
 	return (
-		<SafeAreaView className='bg-zinc-800 flex-1'>
-			<FlatList
-				data={anime}
-				renderItem={({ item }) => <AnimeListItem anime={item} />}
-				keyExtractor={item => item.mal_id.toString()} // Уникальный ключ для каждого элемента
-			/>
-		</SafeAreaView>
+		<>
+			<Header />
+			<SafeAreaView className='bg-zinc-800 flex-1'>
+				<FlatList
+					data={anime}
+					renderItem={({ item }) => <AnimeListItem anime={item} />}
+					keyExtractor={item => item.mal_id.toString()} // Уникальный ключ для каждого элемента
+				/>
+			</SafeAreaView>
+		</>
 	)
 }
 
