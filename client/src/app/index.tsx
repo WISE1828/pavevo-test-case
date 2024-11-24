@@ -7,6 +7,8 @@ import { FlatList, SafeAreaView } from 'react-native'
 
 const HomeScreen: FC = () => {
 	const [anime, setAnime] = useState<IAnime[]>([])
+	const [searchQuery, setSearchQuery] = useState('') // Состояние для хранения поискового запроса
+	const [filters, setFilters] = useState({ TV: false, Movie: false }) // Состояние для хранения фильтров
 
 	useEffect(() => {
 		fetchAnime() // Вызов функции для получения аниме
@@ -23,12 +25,28 @@ const HomeScreen: FC = () => {
 		}
 	}
 
+	// Фильтрация аниме на основе поискового запроса и выбранных фильтров
+	const filteredAnime = anime.filter(a => {
+		const matchesSearch = a.title
+			.toLowerCase()
+			.includes(searchQuery.toLowerCase())
+		const matchesFilter =
+			(filters.TV && a.type === 'TV') ||
+			(filters.Movie && a.type === 'Movie') ||
+			(!filters.TV && !filters.Movie)
+		return matchesSearch && matchesFilter
+	})
+
 	return (
 		<>
-			<Header />
+			<Header
+				setSearchQuery={setSearchQuery}
+				filters={filters}
+				setFilters={setFilters}
+			/>
 			<SafeAreaView className='bg-zinc-800 flex-1'>
 				<FlatList
-					data={anime}
+					data={filteredAnime} // Используем отфильтрованный список
 					renderItem={({ item }) => <AnimeListItem anime={item} />}
 					keyExtractor={item => item.mal_id.toString()} // Уникальный ключ для каждого элемента
 				/>
